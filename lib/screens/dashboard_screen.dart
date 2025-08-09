@@ -1,9 +1,12 @@
-
 // screens/dashboard_screen.dart
- import 'package:flutter/material.dart';
- import 'package:provider/provider.dart';
- import '../providers/event_provider.dart';
- import '../providers/auth_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scanner/core/constants/colors.dart';
+import 'package:scanner/core/constants/dimens.dart';
+import 'package:scanner/core/constants/styles.dart';
+import 'package:scanner/widgets/custom_button.dart';
+import '../providers/event_provider.dart';
+import '../providers/auth_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -12,15 +15,18 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final event = Provider.of<EventProvider>(context);
 
-    return SafeArea (
+    return SafeArea(
       child: Scaffold(
-        backgroundColor:Colors.black,
+        backgroundColor: AppColors.blackColor,
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             'Dashboard',
-            style: TextStyle(color: Colors.black),
+            style: Styles.white18w400.copyWith(
+              color: AppColors.blackColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          backgroundColor:Color(0xFFDBF941),
+          backgroundColor: AppColors.secondaryColor,
           actions: [
             IconButton(
               icon: const Icon(Icons.logout, color: Colors.black),
@@ -40,25 +46,15 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 10),
               _buildStatsGrid(context, event),
               const SizedBox(height: 30),
-              SizedBox(
+
+              CustomElevatedBtn(
+                height: Dimens.fifty,
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFDBF941),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 4,
-                  ),
-                  onPressed: () => Navigator.pushNamed(context, '/scanner'),
-                  child: const Text(
-                    'Start Scanning',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                onTap: () => Navigator.pushNamed(context, '/scanner'),
+                child: Text(
+                  'Start Scanning',
+                  style: Styles.white16w500.copyWith(
+                    color: AppColors.blackColor,
                   ),
                 ),
               ),
@@ -71,14 +67,31 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildStatsGrid(BuildContext context, EventProvider event) {
     final stats = [
-      {'title': 'Bookings', 'value': event.totalBookings.toString(), 'icon': Icons.event_available},
-      {'title': 'Attended', 'value': event.attended.toString(), 'icon': Icons.check_circle},
-      {'title': 'Remaining', 'value': event.remaining.toString(), 'icon': Icons.access_time},
-      {'title': 'Earnings', 'value': '₹${event.earnings}', 'icon': Icons.currency_rupee},
+      {
+        'title': 'Bookings',
+        'value': event.totalBookings.toString(),
+        'icon': Icons.event_available,
+      },
+      {
+        'title': 'Attended',
+        'value': event.attended.toString(),
+        'icon': Icons.check_circle,
+      },
+      {
+        'title': 'Remaining',
+        'value': event.remaining.toString(),
+        'icon': Icons.access_time,
+      },
+      {
+        'title': 'Earnings',
+        'value': '₹${event.earnings}',
+        'icon': Icons.currency_rupee,
+      },
     ];
 
     return GridView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: stats.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -97,45 +110,32 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildStatCard(String title, String value, IconData icon) {
-    return GestureDetector(
-      onTapDown: (_) {},
-      child: AnimatedContainer(
-        duration:  Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
-        decoration:  BoxDecoration(
-  color: Color(0xFFDBF941),
-
-
-          
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFFB2B2B2).withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 30, color: Colors.black),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white10,
+        borderRadius: BorderRadius.circular(Dimens.twelve),
+        border: Border.all(color: AppColors.whiteColor.withOpacity(0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 30, color: AppColors.whiteColor),
+          const SizedBox(height: 12),
+          Text(title, style: Styles.white14w400),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: Styles.white18w400.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

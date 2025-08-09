@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/core/constants/colors.dart';
+import 'package:scanner/core/constants/dimens.dart';
+import 'package:scanner/core/constants/styles.dart';
 import 'package:scanner/widgets/custom_button.dart';
 import 'package:scanner/widgets/custom_textformfield.dart';
 
@@ -17,27 +20,26 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
- void _handleLogin() {
-  if (_formKey.currentState?.validate() ?? false) {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
+  void _handleLogin() {
+    if (_formKey.currentState?.validate() ?? false) {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text;
 
-    setState(() => _isLoading = true);
+      setState(() => _isLoading = true);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => _isLoading = false);
-      debugPrint("Email: $email");
-      debugPrint("Password: $password");
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() => _isLoading = false);
+        debugPrint("Email: $email");
+        debugPrint("Password: $password");
 
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    });
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -49,35 +51,38 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ListView(
               shrinkWrap: true,
               children: [
-                // Icon(
-                //   Icons.lock,
-                //   size: 100,
-                //   color: theme.iconTheme.color,
-                // ),
-               Image.asset('assets/images/logo (1).png',height: 200,
-  width: 200,),
-               
+                const SizedBox(height: 10),
+                Image.asset(
+                  'assets/images/logo (1).png',
+                  height: 200,
+                  width: 200,
+                ),
                 const SizedBox(height: 24),
 
                 Text(
                   "Welcome back!",
                   textAlign: TextAlign.center,
-                  style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Styles.white18w400.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Dimens.twentyFour,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
                 Text(
                   "Please log in with your email and password.",
                   textAlign: TextAlign.center,
-                  style: textTheme.bodySmall?.copyWith(color: Colors.white70),
+                  style: Styles.white14w400.copyWith(
+                    color: AppColors.colorC5C5C6,
+                    fontSize: Dimens.thirteen,
+                  ),
                 ),
                 const SizedBox(height: 32),
 
-                // Email field
                 CustomTextFormField(
-                  controller: _emailController,
+                  textEditingController: _emailController,
                   hintText: "Email",
-                  keyboardType: TextInputType.emailAddress,
+                  textInputType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please enter your email";
@@ -88,15 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 17),
 
-                const SizedBox(height: 16),
-
-                // Password field
                 CustomTextFormField(
-                  controller: _passwordController,
+                  textEditingController: _passwordController,
                   hintText: "Password",
                   isObscure: !_isPasswordVisible,
-                  suffixIcon: IconButton(
+                  suffixWidget: IconButton(
                     icon: Icon(
                       _isPasswordVisible
                           ? Icons.visibility
@@ -119,16 +122,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-
                 const SizedBox(height: 24),
 
-                // Login button
-                SizedBox(
+                CustomElevatedBtn(
+                  height: Dimens.fifty,
                   width: double.infinity,
-                  child: CustomButton(
-                    title: "Login",
-                    isLoading: _isLoading,
-                    onPressed: _handleLogin,
+                  isEnabled: !_isLoading,
+                  isLoading: _isLoading,
+                  onTap: _handleLogin,
+                  child: Text(
+                    'Login',
+                    style: Styles.white16w500.copyWith(
+                      color: AppColors.blackColor,
+                    ),
                   ),
                 ),
               ],
